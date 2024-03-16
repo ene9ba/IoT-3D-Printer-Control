@@ -12,16 +12,29 @@
 
 // needed for MQTT
 #include <PubSubClient.h>
+#include <time.h>
 
 
 
-
-
+//ntp
+#define MY_NTP_SERVER "at.pool.ntp.org"           
+#define MY_TZ "CET-1CEST,M3.5.0/02,M10.5.0/03"   
 
 
 WiFiClient espClient;
-
+time_t now;                         // this are the seconds since Epoch (1970) - UTC
+tm my_time;     
+char  dt[80];
 PubSubClient client(espClient);
+
+
+void set_time_string() {
+  time(&now);                       // read the current time
+  localtime_r(&now, &my_time);           // update the structure tm with the current time
+  sprintf(dt,"%02d.%02d.%4d %02d:%02d:%02d", my_time.tm_mday, my_time.tm_mon+1, my_time.tm_year + 1900, my_time.tm_hour, my_time.tm_min, my_time.tm_sec);
+ 
+}
+
 
 /******************************************************************************************************************
 * Sendet Degug information auf den MQTT-Kanal
@@ -293,12 +306,15 @@ void check_mqtt_connect()
             // Attempt to connect
             if (client.connect(HOSTNAME.c_str())) 
             {
-              Serial.println("connected");
+              Serial.println("reconnected");
               // Once connected, publish an announcement...
               
               client.publish(HOSTNAME.c_str(), " online");
               client.setCallback(callback);
               mqtt_subscribe();
+              // Once connected, publish an announcement...
+              set_time_string();
+              client.publish(mqtt_pub_lastconnect, dt);
 
               delay(1500);
               return; 

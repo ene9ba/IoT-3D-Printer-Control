@@ -5,6 +5,7 @@ Dieses Programm steuert die 3D Druckerbox, überwacht und steuert die
 Lüfterdrehzahl, überwacht mit Feuersensor und Temperatur und Luftfeuchte,
 zeigt die wesentlichen Werte in eine TFT-Display an.
 
+Version 1.10 v. 16.03.2024 ntp hinzugefügt las message Meldung geht an mqtt
 
 
 */
@@ -13,7 +14,7 @@ zeigt die wesentlichen Werte in eine TFT-Display an.
 #define _MQTT_DEBUG_
 
 #include <Arduino.h>
-#include <dht.h>
+#include <DHT.h>
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7789.h>
@@ -56,9 +57,13 @@ const char* mqtt_pub_Version  ="/openHAB/3dCabinet/Version";
 const char* mqtt_pub_RSSI     ="/openHAB/3dCabinet/RSSI";
 const char* mqtt_pub_Debug    ="/openHAB/3dCabinet/Debug";
 
+const char* mqtt_pub_lastconnect    =  "/openHAB/3dCabinet/lastReconnect";
+const char* mqtt_pub_lastmsg        =  "/openHAB/3dCabinet/lastMessage";
+
+
 // mqtt subscribe values
 const char* mqtt_pub_Val1     ="/openHAB/3dCabinet/Fan_rpm_target";
-char    msg1[150]; 
+char    msg1[250]; 
 
 
 // Global Variables
@@ -77,7 +82,7 @@ word              roundrobin        = 0;
 
 
 
-String Version    = "V1.00 :: ";
+String Version    = "V1.10 :: ";
 String AppName    = "Smart-Druckergehäuse";
 
 
@@ -149,7 +154,8 @@ void publish_MQTT_Values()
     sprintf(msg1,"%d",fire_analog);
     client.publish(mqtt_pub_Val7,msg1);
 
-   
+    set_time_string();  
+    client.publish(mqtt_pub_lastmsg,dt);
 
     thread_lastMsg_RSSI = millis();
 
@@ -575,6 +581,7 @@ void setup() {
       pinMode(RELAIS,             OUTPUT);     // Relais power control      
       pinMode(SMOKE,               INPUT);     // Smoke sensor
 
+      configTime(MY_TZ, MY_NTP_SERVER);
      
       digitalWrite(RELAIS_LED,HIGH);  
       // pwm frequency
