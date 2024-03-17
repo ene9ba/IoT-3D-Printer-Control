@@ -631,7 +631,8 @@ void setup() {
       tft.println("MQTT");
       
       // publish version
-      String out=Version+AppName;
+      set_time_string();
+      String out=Version+AppName+" startup at "+dt;
       Serial.println(out);
       out.toCharArray(msg1,75);
       client.publish(mqtt_pub_Version, msg1);
