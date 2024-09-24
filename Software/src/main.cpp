@@ -6,7 +6,7 @@ Lüfterdrehzahl, überwacht mit Feuersensor und Temperatur und Luftfeuchte,
 zeigt die wesentlichen Werte in eine TFT-Display an.
 
 Version 1.10 v. 16.03.2024 ntp hinzugefügt las message Meldung geht an mqtt
-
+Version 1.20 v. 24.09.2024 mqtt mit user und passort, reconnect getestet
 
 */
 
@@ -25,7 +25,9 @@ Version 1.10 v. 16.03.2024 ntp hinzugefügt las message Meldung geht an mqtt
 String        HOSTNAME           = "3DCabinetControl";
 const char*   AUTO_CONNECT_NAME  = "IoT_CabinetControl";
 //MQTT-Server Adresse
-const char*   MQTT_SERVER        = "VM2-MQTT";
+const char*   MQTT_SERVER        = "docker-home";
+#define MQTT_USER "mymqtt"
+#define MQTT_PW   "yfAlORp1C3k70fy6XSkY"
 
 //Portzuordnung
 #define PWM                 0     // gpio 0 oder D3
@@ -479,7 +481,7 @@ void check_system() {
           get_FireSense();
           publish_MQTT_Values();
           ArduinoOTA.handle();
-          check_mqtt_connect();
+          //check_mqtt_connect();
           client.loop();
           delay(500);  
       }
@@ -679,8 +681,13 @@ void loop()
           // Regelmäßig abfragen, ob ein OTA Update ansteht
           ArduinoOTA.handle();
               
+          
           //WiFi Verbindung prüfen
-          check_mqtt_connect();
+          if (!client.connected()) 
+          {
+            mqtt_reconnect();
+          }
+          
           
           client.loop();
 

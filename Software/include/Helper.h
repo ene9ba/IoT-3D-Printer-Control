@@ -259,7 +259,8 @@ void setup_mqtt()
   
           while (!client.connected()) 
           {
-            client.connect((char*)MQTT_HostNameChar);
+            
+            client.connect((char*)MQTT_HostNameChar, MQTT_USER, MQTT_PW);
 
           
             Serial.print(".");
@@ -330,3 +331,39 @@ void check_mqtt_connect()
          
     }
 
+/******************************************************************************************************************
+  * void mqtt_reconnect()
+  * Verbindet sich mit dem MQTT-Server
+*******************************************************************************************************************/
+
+
+void mqtt_reconnect() 
+    {   
+        // repeat trying connect 4 times, then reset
+        int retry = 0;
+        #define TRIES 3
+                 
+        
+        if (!client.connected()) 
+        {
+          while (retry <= TRIES)
+          {
+            Serial.println("Attempting MQTT reconnecti...");
+            // Attempt to connect
+            if (client.connect(HOSTNAME.c_str(), MQTT_USER, MQTT_PW));
+            {
+              Serial.println("connected");
+              // Once connected, publish an announcement...
+              
+              client.publish(HOSTNAME.c_str(), " online");
+
+              delay(1500);
+              return; 
+            }
+            retry++;
+          }
+          //ESP.restart();     
+
+        }
+         
+    }
