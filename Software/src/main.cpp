@@ -110,7 +110,7 @@ long        thread_show_info_display = 0;
 #define     MIN_ERR_RPM_100  2000     // Minimal erwartete Drehzahl Lüfter bei Sollwert 100 % 
 #define     MIN_WARN_RPM_100 1000     // Minimal erwartete Drehzahl Lüfter bei Sollwert 100 % 
 #define     MAX_TEMP          45      // Maximale Temperatur im Gehäuse
-#define     MIN_RPM         1500      // Minimale Drehzahl Lüfter
+#define     MIN_RPM         1000      // Minimale Drehzahl Lüfter
 
 
 
