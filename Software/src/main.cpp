@@ -7,7 +7,7 @@ zeigt die wesentlichen Werte in eine TFT-Display an.
 
 Version 1.10 v. 16.03.2024 ntp hinzugefügt las message Meldung geht an mqtt
 Version 1.20 v. 24.09.2024 mqtt mit user und passort, reconnect getestet
-
+Version 1.21 v. 08.02.2026 mqtt domain name changed from docker-home to docker-home.castle
 */
 
 //#define __DEBUG
@@ -25,7 +25,7 @@ Version 1.20 v. 24.09.2024 mqtt mit user und passort, reconnect getestet
 String        HOSTNAME           = "3DCabinetControl";
 const char*   AUTO_CONNECT_NAME  = "IoT_CabinetControl";
 //MQTT-Server Adresse
-const char*   MQTT_SERVER        = "docker-home";
+const char*   MQTT_SERVER        = "docker-home.castle";
 #define MQTT_USER "mymqtt"
 #define MQTT_PW   "yfAlORp1C3k70fy6XSkY"
 
@@ -84,7 +84,7 @@ word              roundrobin        = 0;
 
 
 
-String Version    = "V1.10 :: ";
+String Version    = "V1.21 :: ";
 String AppName    = "Smart-Druckergehäuse";
 
 
