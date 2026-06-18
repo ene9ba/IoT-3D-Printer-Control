@@ -25,7 +25,7 @@ Version 1.21 v. 08.02.2026 mqtt domain name changed from docker-home to docker-h
 String        HOSTNAME           = "3DCabinetControl";
 const char*   AUTO_CONNECT_NAME  = "IoT_CabinetControl";
 //MQTT-Server Adresse
-const char*   MQTT_SERVER        = "docker-home.castle";
+const char*   MQTT_SERVER        = "mqtt-srv1.castle";
 #define MQTT_USER "mymqtt"
 #define MQTT_PW   "yfAlORp1C3k70fy6XSkY"
 
